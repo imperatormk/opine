@@ -1,5 +1,6 @@
 import { pathToRegexp } from "../utils/pathToRegex.ts";
 import type { NextFunction, Request, Response } from "../types.ts";
+import { requestProxy } from "../../mod.ts";
 
 export const Layer: any = function Layer(
   this: any,
@@ -46,7 +47,7 @@ Layer.prototype.handle_error = async function handle_error(
   }
 
   try {
-    await fn(error, req, res, next);
+    await fn(error, requestProxy(req), res, next);
   } catch (err) {
     next(err);
   }
@@ -73,7 +74,7 @@ Layer.prototype.handle_request = async function handle(
   }
 
   try {
-    await fn(req, res, next);
+    await fn(requestProxy(req), res, next);
   } catch (err) {
     next(err);
   }
